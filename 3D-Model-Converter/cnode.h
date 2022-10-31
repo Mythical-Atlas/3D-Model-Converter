@@ -48,14 +48,12 @@ public:
 		// indices will have to be externally handled
 		
 		meshCount = node->mNumMeshes;
-		meshIndices = (int*)malloc(sizeof(int) * meshCount);
-		memcpy(meshIndices, node->mMeshes, meshCount);
+		meshIndices = (int*)node->mMeshes;
 	}
 
 	void setParentIndex(int parentIndex) {this->parentIndex = parentIndex;}
 	void setChildIndices(int* childIndices) {
-		this->childIndices = (int*)malloc(sizeof(int) * childCount);
-		memcpy(this->childIndices, childIndices, childCount);
+		this->childIndices = childIndices;
 	}
 };
 

@@ -42,10 +42,19 @@ void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int anim
 		fprintf(fp, "int node%iParentIndex = %i;\n", n, nodes[n].parentIndex);
 
 		fprintf(fp, "int node%iChildCount = %i;\n", n, nodes[n].childCount);
-		fprintf(fp, "int node%iChildIndices[%i] = ", n, nodes[n].childCount);
-		for(int i = 0; i < nodes[n].childCount; i++) {}
+		if(nodes[n].childCount > 0) {
+			fprintf(fp, "int node%iChildIndices[%i] = {", n, nodes[n].childCount);
+			for(int i = 0; i < nodes[n].childCount; i++) {fprintf(fp, "%i, ", nodes[n].childIndices[i]);}
+			fprintf(fp, "};\n");
+		}
 
 		fprintf(fp, "int node%iMeshCount = %i;\n", n, nodes[n].meshCount);
+		if(nodes[n].meshCount > 0) {
+			fprintf(fp, "int node%iMeshIndices[%i] = {", n, nodes[n].meshCount);
+			for(int i = 0; i < nodes[n].meshCount; i++) {fprintf(fp, "%i, ", nodes[n].meshIndices[i]);}
+			fprintf(fp, "};\n");
+		}
+		fprintf(fp, "\n");
 	}
 
 	fprintf(fp, "\nint meshCount = %i;\n", meshCount);
@@ -61,7 +70,7 @@ void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int anim
 			fprintf(fp, "\t%ff, %ff,", meshes[m].uvCoords[v][0], meshes[m].uvCoords[v][1]);
 			fprintf(fp, "\t%ff, %ff, %ff,\n", meshes[m].normals[v][0], meshes[m].normals[v][1], meshes[m].normals[v][2]);
 		}
-		fprintf(fp, "};\n");
+		fprintf(fp, "};\n\n");
 		//fprintf(fp, "};\nint mesh%iMaterialID = %i;\n\n", m, meshes[m].materialID);
 	}
 
