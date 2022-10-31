@@ -6,39 +6,58 @@
 
 #include "cexporter.h"
 #include "cmesh.h"
+#include "ctypes.h"
+#include "cnode.h"
+#include "canim.h"
+
+CMesh* meshes;
+int nodeIndex = 0;
+CNode* nodes;
+
+CAnim* anims;
+
+int countNodeChildren(aiNode* node) {
+	if(node->mNumChildren == 0) {return 0;}
+
+	int count = 1;
+	for(int i = 0; i < node->mNumChildren; i++) {count += countNodeChildren(node->mChildren[i]);}
+
+	return count;
+}
+
+void loadNode(aiNode* node, int parentIndex) {
+	nodes[nodeIndex].loadNode(node);
+	if(parentIndex != -1) {nodes[nodeIndex].setParentIndex(parentIndex);} // doesn't really matter since it's set to -1 on load
+	
+	int newParentIndex = nodeIndex;
+	nodeIndex++;
+
+	int* childIndices = (int*)malloc(sizeof(int) * node->mNumChildren);
+	for(int i = 0; i < node->mNumChildren; i++) {
+		childIndices[i] = nodeIndex;
+		loadNode(node->mChildren[i], newParentIndex);
+	}
+
+	nodes[newParentIndex].setChildIndices(childIndices);
+}
 
 int main() {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile("sonic.fbx", 0);
 
-	/*printf("Number of child nodes from the root node: %i\n", scene->mRootNode->mNumChildren);
-	printf("Number of meshes in the root node: %i\n", scene->mRootNode->mNumMeshes);
-	printf("\n");
-
-	for(int n = 0; n < scene->mRootNode->mNumChildren; n++) {
-		if(scene->mRootNode->mChildren[n]->mNumMeshes != 0) {
-			printf("Node index: %i\n", n);
-			printf("Number of meshes: %i\n", scene->mRootNode->mChildren[n]->mNumMeshes);
-		
-			for(int m = 0; m < scene->mRootNode->mChildren[n]->mNumMeshes; m++) {
-				printf("Mesh index: %i\n", m);
-				printf("Number of vertices: %i\n", scene->mMeshes[scene->mRootNode->mChildren[n]->mMeshes[m]]->mNumVertices);
-				printf("Material index: %i\n", scene->mMeshes[scene->mRootNode->mChildren[n]->mMeshes[m]]->mMaterialIndex);
-			}
-
-			getchar();
-		}
-	}*/
-
 	int meshCount = scene->mNumMeshes;
-	CMesh* meshes = (CMesh*)malloc(sizeof(CMesh) * meshCount);
-	// scene->mRootNode->mChildren[2]->mMeshes[0]
-	for(int m = 0; m < meshCount; m++) {
-		meshes[m].loadVertices(scene->mMeshes[m]->mVertices, scene->mMeshes[m]->mNumVertices);
-		meshes[m].loadUVCoords(scene->mMeshes[m]->mTextureCoords);
-		meshes[m].loadNormals(scene->mMeshes[m]->mNormals);
-		meshes[m].loadMaterialID(scene->mMeshes[m]->mMaterialIndex);
-	}
+	meshes = (CMesh*)malloc(sizeof(CMesh) * meshCount);
+	for(int m = 0; m < meshCount; m++) {meshes[m].loadMesh(scene->mMeshes[m]);}
+
+	int nodeCount = countNodeChildren(scene->mRootNode) + 1;
+	nodes = (CNode*)malloc(sizeof(CNode) * nodeCount);
+	loadNode(scene->mRootNode, -1);
+
+	// animChannels
+
+	int animCount = scene->mNumAnimations;
+	anims = (CAnim*)malloc(sizeof(CAnim) * animCount);
+	for(int a = 0; a < animCount; a++) {anims[a].loadAnim(scene->mAnimations[a]);}
 
 	cexport(meshes, meshCount);
 

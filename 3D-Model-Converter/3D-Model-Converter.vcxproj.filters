@@ -18,6 +18,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -26,14 +29,26 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cmesh.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cexporter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="model.h">
       <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cmesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cexporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cnode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="canim.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="canimChannel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -128,14 +128,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="sonic.fbx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="canim.h" />
+    <ClInclude Include="canimChannel.h" />
     <ClInclude Include="cexporter.h" />
+    <ClInclude Include="ctypes.h" />
     <ClInclude Include="cmesh.h" />
+    <ClInclude Include="cnode.h" />
     <ClInclude Include="model.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

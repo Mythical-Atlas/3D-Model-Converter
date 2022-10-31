@@ -1,10 +1,9 @@
 #include <assimp/scene.h>
 
+#include "ctypes.h"
+
 #ifndef CMESH_H
 #define CMESH_H
-
-typedef float Vec2[2];
-typedef float Vec3[3];
 
 class CMesh {
 public:
@@ -13,6 +12,13 @@ public:
 	Vec2* uvCoords;
 	Vec3* normals;
 	int materialID;
+
+	void loadMesh(aiMesh* mesh) {
+		this->loadVertices(mesh->mVertices, mesh->mNumVertices);
+		this->loadUVCoords(mesh->mTextureCoords);
+		this->loadNormals(mesh->mNormals);
+		this->loadMaterialID(mesh->mMaterialIndex);
+	}
 
 	void loadVertices(aiVector3D* mVertices, int vertCount) {
 		this->vertCount = vertCount;
