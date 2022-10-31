@@ -13,16 +13,13 @@
 CMesh* meshes;
 int nodeIndex = 0;
 CNode* nodes;
-
+CAnimChannel* animChannels;
 CAnim* anims;
 
-int countNodeChildren(aiNode* node) {
-	if(node->mNumChildren == 0) {return 0;}
-
-	int count = 1;
-	for(int i = 0; i < node->mNumChildren; i++) {count += countNodeChildren(node->mChildren[i]);}
-
-	return count;
+int countNodeChildren(aiNode* node, int prevCount) {
+	int newCount = prevCount + 1;
+	for(int i = 0; i < node->mNumChildren; i++) {newCount = countNodeChildren(node->mChildren[i], newCount);}
+	return newCount;
 }
 
 void loadNode(aiNode* node, int parentIndex) {
@@ -49,17 +46,29 @@ int main() {
 	meshes = (CMesh*)malloc(sizeof(CMesh) * meshCount);
 	for(int m = 0; m < meshCount; m++) {meshes[m].loadMesh(scene->mMeshes[m]);}
 
-	int nodeCount = countNodeChildren(scene->mRootNode) + 1;
+	int nodeCount = countNodeChildren(scene->mRootNode, 0);
 	nodes = (CNode*)malloc(sizeof(CNode) * nodeCount);
 	loadNode(scene->mRootNode, -1);
-
-	// animChannels
 
 	int animCount = scene->mNumAnimations;
 	anims = (CAnim*)malloc(sizeof(CAnim) * animCount);
 	for(int a = 0; a < animCount; a++) {anims[a].loadAnim(scene->mAnimations[a]);}
 
-	cexport(meshes, meshCount);
+	int channelIndex = 0;
+	int animChannelCount = 0;
+	for(int a = 0; a < animCount; a++) {animChannelCount += scene->mAnimations[a]->mNumChannels;}
+	animChannels = (CAnimChannel*)malloc(sizeof(CAnimChannel) * animChannelCount);
+	for(int a = 0; a < animCount; a++) {
+		int* channelIndices = (int*)malloc(sizeof(int) * scene->mAnimations[a]->mNumChannels);
+		for(int c = 0; c < scene->mAnimations[a]->mNumChannels; c++) {
+			animChannels[c].loadAnimChannel(scene->mAnimations[a]->mChannels[c]);
+			channelIndices[c] = channelIndex++;
+		}
+
+		anims[a].setChannelIndices(channelIndices);
+	}
+
+	cexport(nodeCount, nodes, meshCount, meshes, animCount, anims, animChannelCount, animChannels);
 
 	return 0;
 }

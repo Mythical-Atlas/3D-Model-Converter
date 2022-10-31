@@ -25,8 +25,7 @@ public:
 		name = (char*)malloc(nameLength);
 		memcpy(name, node->mName.C_Str(), nameLength);
 
-		// issue here
-		/*transformation.a1 = node->mTransformation.a1;
+		transformation.a1 = node->mTransformation.a1;
 		transformation.a2 = node->mTransformation.a2;
 		transformation.a3 = node->mTransformation.a3;
 		transformation.a4 = node->mTransformation.a4;
@@ -41,7 +40,7 @@ public:
 		transformation.d1 = node->mTransformation.d1;
 		transformation.d2 = node->mTransformation.d2;
 		transformation.d3 = node->mTransformation.d3;
-		transformation.d4 = node->mTransformation.d4;*/
+		transformation.d4 = node->mTransformation.d4;
 
 		parentIndex = -1;
 
