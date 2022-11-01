@@ -58,10 +58,11 @@ int main() {
 	int animChannelCount = 0;
 	for(int a = 0; a < animCount; a++) {animChannelCount += scene->mAnimations[a]->mNumChannels;}
 	animChannels = (CAnimChannel*)malloc(sizeof(CAnimChannel) * animChannelCount);
+
 	for(int a = 0; a < animCount; a++) {
 		int* channelIndices = (int*)malloc(sizeof(int) * scene->mAnimations[a]->mNumChannels);
 		for(int c = 0; c < scene->mAnimations[a]->mNumChannels; c++) {
-			animChannels[c].loadAnimChannel(scene->mAnimations[a]->mChannels[c]);
+			animChannels[channelIndex].loadAnimChannel(scene->mAnimations[a]->mChannels[c]);
 			channelIndices[c] = channelIndex++;
 		}
 

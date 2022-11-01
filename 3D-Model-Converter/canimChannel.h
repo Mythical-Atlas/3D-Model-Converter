@@ -31,31 +31,31 @@ public:
 		positionKeyTimes = (double*)malloc(sizeof(double) * positionKeyCount);
 		positionKeyValues = (Vec3*)malloc(sizeof(Vec3) * positionKeyCount);
 		for(int i = 0; i < positionKeyCount; i++) {
-			positionKeyTimes[i] = nodeAnim->mPositionKeys->mTime;
-			positionKeyValues[i][0] = nodeAnim->mPositionKeys->mValue.x;
-			positionKeyValues[i][1] = nodeAnim->mPositionKeys->mValue.y;
-			positionKeyValues[i][2] = nodeAnim->mPositionKeys->mValue.z;
+			positionKeyTimes[i] = nodeAnim->mPositionKeys[i].mTime;
+			positionKeyValues[i][0] = nodeAnim->mPositionKeys[i].mValue.x;
+			positionKeyValues[i][1] = nodeAnim->mPositionKeys[i].mValue.y;
+			positionKeyValues[i][2] = nodeAnim->mPositionKeys[i].mValue.z;
 		}
 
 		rotationKeyCount = nodeAnim->mNumRotationKeys;
 		rotationKeyTimes = (double*)malloc(sizeof(double) * rotationKeyCount);
 		rotationKeyValues = (Quat*)malloc(sizeof(Quat) * rotationKeyCount);
-		for(int i = 0; i < positionKeyCount; i++) {
-			rotationKeyTimes[i] = nodeAnim->mRotationKeys->mTime;
-			rotationKeyValues[i][0] = nodeAnim->mRotationKeys->mValue.w;
-			rotationKeyValues[i][1] = nodeAnim->mRotationKeys->mValue.x;
-			rotationKeyValues[i][2] = nodeAnim->mRotationKeys->mValue.y;
-			rotationKeyValues[i][3] = nodeAnim->mRotationKeys->mValue.z;
+		for(int i = 0; i < rotationKeyCount; i++) {
+			rotationKeyTimes[i] = nodeAnim->mRotationKeys[i].mTime;
+			rotationKeyValues[i][0] = nodeAnim->mRotationKeys[i].mValue.w;
+			rotationKeyValues[i][1] = nodeAnim->mRotationKeys[i].mValue.x;
+			rotationKeyValues[i][2] = nodeAnim->mRotationKeys[i].mValue.y;
+			rotationKeyValues[i][3] = nodeAnim->mRotationKeys[i].mValue.z;
 		}
 
 		scaleKeyCount = nodeAnim->mNumScalingKeys;
 		scaleKeyTimes = (double*)malloc(sizeof(double) * scaleKeyCount);
 		scaleKeyValues = (Vec3*)malloc(sizeof(Vec3) * scaleKeyCount);
-		for(int i = 0; i < positionKeyCount; i++) {
-			scaleKeyTimes[i] = nodeAnim->mScalingKeys->mTime;
-			scaleKeyValues[i][0] = nodeAnim->mScalingKeys->mValue.x;
-			scaleKeyValues[i][1] = nodeAnim->mScalingKeys->mValue.y;
-			scaleKeyValues[i][2] = nodeAnim->mScalingKeys->mValue.z;
+		for(int i = 0; i < scaleKeyCount; i++) {
+			scaleKeyTimes[i] = nodeAnim->mScalingKeys[i].mTime;
+			scaleKeyValues[i][0] = nodeAnim->mScalingKeys[i].mValue.x;
+			scaleKeyValues[i][1] = nodeAnim->mScalingKeys[i].mValue.y;
+			scaleKeyValues[i][2] = nodeAnim->mScalingKeys[i].mValue.z;
 		}
 	}
 };

@@ -28,10 +28,7 @@ public:
 		// indices handled externally
 	}
 
-	void setChannelIndices(int* channelIndices) {
-		this->channelIndices = (int*)malloc(sizeof(int) * channelCount);
-		memcpy(this->channelIndices, channelIndices, channelCount);
-	}
+	void setChannelIndices(int* channelIndices) {this->channelIndices = channelIndices;}
 };
 
 #endif

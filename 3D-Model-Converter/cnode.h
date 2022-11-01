@@ -52,9 +52,7 @@ public:
 	}
 
 	void setParentIndex(int parentIndex) {this->parentIndex = parentIndex;}
-	void setChildIndices(int* childIndices) {
-		this->childIndices = childIndices;
-	}
+	void setChildIndices(int* childIndices) {this->childIndices = childIndices;}
 };
 
 #endif
