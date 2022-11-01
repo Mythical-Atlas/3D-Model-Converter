@@ -113,10 +113,13 @@ void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int anim
 	fprintf(fp, "int* animationChannelNodeNameLengths;\n");
 	fprintf(fp, "const char** animationChannelNodeNames;\n");
 	fprintf(fp, "int* animationChannelPositionKeyCounts;\n");
+	fprintf(fp, "double** animationChannelPositionKeyTimes;\n");
 	fprintf(fp, "float** animationChannelPositionKeyValues;\n");
 	fprintf(fp, "int* animationChannelRotationKeyCounts;\n");
+	fprintf(fp, "double** animationChannelRotationKeyTimes;\n");
 	fprintf(fp, "float** animationChannelRotationKeyValues;\n");
 	fprintf(fp, "int* animationChannelScaleKeyCounts;\n");
+	fprintf(fp, "double** animationChannelScaleKeyTimes;\n\n");
 	fprintf(fp, "float** animationChannelScaleKeyValues;\n\n");
 
 	for(int a = 0; a < channelCount; a++) {
@@ -210,10 +213,10 @@ void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int anim
 	for(int m = 0; m < animCount; m++) {fprintf(fp, "\tanimationNames[%i] = &animation%iName[0];\n", m, m);}
 
 	fprintf(fp, "\n\tanimationDurations = (double*)malloc(sizeof(double) * %i);\n", animCount);
-	for(int m = 0; m < animCount; m++) {fprintf(fp, "\tanimationDurations[%i] = %i;\n", m, anims[m].duration);}
+	for(int m = 0; m < animCount; m++) {fprintf(fp, "\tanimationDurations[%i] = %lf;\n", m, anims[m].duration);}
 
 	fprintf(fp, "\n\tanimationTicksPerSeconds = (double*)malloc(sizeof(double) * %i);\n", animCount);
-	for(int m = 0; m < animCount; m++) {fprintf(fp, "\tanimationTicksPerSeconds[%i] = %i;\n", m, anims[m].ticksPerSecond);}
+	for(int m = 0; m < animCount; m++) {fprintf(fp, "\tanimationTicksPerSeconds[%i] = %lf;\n", m, anims[m].ticksPerSecond);}
 
 	fprintf(fp, "\n\tanimationChannelCounts = (int*)malloc(sizeof(int) * %i);\n", animCount);
 	for(int m = 0; m < animCount; m++) {fprintf(fp, "\tanimationChannelCounts[%i] = %i;\n", m, anims[m].channelCount);}
@@ -232,17 +235,26 @@ void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int anim
 	fprintf(fp, "\n\tanimationChannelPositionKeyCounts = (int*)malloc(sizeof(int) * %i);\n", channelCount);
 	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelPositionKeyCounts[%i] = %i;\n", m, channels[m].positionKeyCount);}
 
+	fprintf(fp, "\n\tanimationChannelPositionKeyTimes = (double**)malloc(sizeof(double*) * %i);\n", channelCount);
+	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelPositionKeyTimes[%i] = &animationChannel%iPositionKeyTimes[0];\n", m, m);}
+
 	fprintf(fp, "\n\tanimationChannelPositionKeyValues = (float**)malloc(sizeof(float*) * %i);\n", channelCount);
 	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelPositionKeyValues[%i] = &animationChannel%iPositionKeyValues[0];\n", m, m);}
 
 	fprintf(fp, "\n\tanimationChannelRotationKeyCounts = (int*)malloc(sizeof(int) * %i);\n", channelCount);
 	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelRotationKeyCounts[%i] = %i;\n", m, channels[m].rotationKeyCount);}
 
+	fprintf(fp, "\n\tanimationChannelRotationKeyTimes = (double**)malloc(sizeof(double*) * %i);\n", channelCount);
+	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelRotationKeyTimes[%i] = &animationChannel%iRotationKeyTimes[0];\n", m, m);}
+
 	fprintf(fp, "\n\tanimationChannelRotationKeyValues = (float**)malloc(sizeof(float*) * %i);\n", channelCount);
 	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelRotationKeyValues[%i] = &animationChannel%iRotationKeyValues[0];\n", m, m);}
 
 	fprintf(fp, "\n\tanimationChannelScaleKeyCounts = (int*)malloc(sizeof(int) * %i);\n", channelCount);
 	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelScaleKeyCounts[%i] = %i;\n", m, channels[m].scaleKeyCount);}
+
+	fprintf(fp, "\n\tanimationChannelScaleKeyTimes = (double**)malloc(sizeof(double*) * %i);\n", channelCount);
+	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelScaleKeyTimes[%i] = &animationChannel%iScaleKeyTimes[0];\n", m, m);}
 
 	fprintf(fp, "\n\tanimationChannelScaleKeyValues = (float**)malloc(sizeof(float*) * %i);\n", channelCount);
 	for(int m = 0; m < channelCount; m++) {fprintf(fp, "\tanimationChannelScaleKeyValues[%i] = &animationChannel%iScaleKeyValues[0];\n", m, m);}
