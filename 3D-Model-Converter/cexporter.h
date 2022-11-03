@@ -119,7 +119,7 @@ void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int anim
 	fprintf(fp, "double** animationChannelRotationKeyTimes;\n");
 	fprintf(fp, "float** animationChannelRotationKeyValues;\n");
 	fprintf(fp, "int* animationChannelScaleKeyCounts;\n");
-	fprintf(fp, "double** animationChannelScaleKeyTimes;\n\n");
+	fprintf(fp, "double** animationChannelScaleKeyTimes;\n");
 	fprintf(fp, "float** animationChannelScaleKeyValues;\n\n");
 
 	for(int a = 0; a < channelCount; a++) {
