@@ -19,7 +19,20 @@ const char* header = ""
 	"\n"
 "";
 
-void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int animCount, CAnim* anims, int channelCount, CAnimChannel* channels) {
+union intBytes {
+	int value;
+	unsigned char bytes[4];
+};
+union floatBytes {
+	float value;
+	unsigned char bytes[4];
+};
+union doubleBytes {
+	double value;
+	unsigned char bytes[8];
+};
+
+void exportHeader(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int animCount, CAnim* anims, int channelCount, CAnimChannel* channels) {
 	FILE* fp = fopen("model.h", "w");
 
 	fprintf(fp, header);
@@ -263,5 +276,101 @@ void cexport(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int anim
 
 	fclose(fp);
 }
+
+void storeChars(FILE* fp, char* string, int length) {for(int i = 0; i < length; i++) {fputc(string[i], fp);}}
+void storeInt(FILE* fp, int num) {
+	intBytes ib;
+	ib.value = num;
+	for(int i = 0; i < 4; i++) {fprintf(fp, "%c", ib.bytes[i]);}
+}
+void storeFloat(FILE* fp, float num) {
+	floatBytes fb;
+	fb.value = num;
+	for(int i = 0; i < 4; i++) {fprintf(fp, "%c", fb.bytes[i]);}
+}
+void storeDouble(FILE* fp, double num) {
+	doubleBytes db;
+	db.value = num;
+	for(int i = 0; i < 8; i++) {fprintf(fp, "%c", db.bytes[i]);}
+}
+void storeVec2(FILE* fp, Vec2 vec) {
+	storeFloat(fp, vec[0]);
+	storeFloat(fp, vec[1]);
+}
+void storeVec3(FILE* fp, Vec3 vec) {
+	storeFloat(fp, vec[0]);
+	storeFloat(fp, vec[1]);
+	storeFloat(fp, vec[2]);
+}
+void storeQuat(FILE* fp, Quat quat) {
+	storeFloat(fp, quat[0]);
+	storeFloat(fp, quat[1]);
+	storeFloat(fp, quat[2]);
+	storeFloat(fp, quat[3]);
+}
+void storeMat(FILE* fp, Mat4x4 mat) {
+	storeFloat(fp, mat.a1); storeFloat(fp, mat.a2); storeFloat(fp, mat.a3); storeFloat(fp, mat.a4);
+	storeFloat(fp, mat.b1); storeFloat(fp, mat.b2); storeFloat(fp, mat.b3); storeFloat(fp, mat.b4);
+	storeFloat(fp, mat.c1); storeFloat(fp, mat.c2); storeFloat(fp, mat.c3); storeFloat(fp, mat.c4);
+	storeFloat(fp, mat.d1); storeFloat(fp, mat.d2); storeFloat(fp, mat.d3); storeFloat(fp, mat.d4);
+}
+
+void exportRaw(int nodeCount, CNode* nodes, int meshCount, CMesh* meshes, int animCount, CAnim* anims, int channelCount, CAnimChannel* channels) {
+	FILE* fp = fopen("model.c3m", "wb");
+	
+	fprintf(fp, "Correll 3D Model");
+
+	storeInt(fp, nodeCount);
+	for(int n = 0; n < nodeCount; n++) {
+		storeInt(fp, nodes[n].nameLength);
+		storeChars(fp, nodes[n].name, nodes[n].nameLength);
+		storeMat(fp, nodes[n].transformation);
+		storeInt(fp, nodes[n].parentIndex);
+		storeInt(fp, nodes[n].childCount);
+		for(int i = 0; i < nodes[n].childCount; i++) {
+			storeInt(fp, nodes[n].childIndices[i]);}
+		storeInt(fp, nodes[n].meshCount);
+		for(int i = 0; i < nodes[n].meshCount; i++) {storeInt(fp, nodes[n].meshIndices[i]);}
+	}
+	
+	storeInt(fp, meshCount);
+	for(int m = 0; m < meshCount; m++) {
+		storeInt(fp, meshes[m].vertCount);
+		for(int v = 0; v < meshes[m].vertCount; v++) {
+			storeVec3(fp, meshes[m].vertices[v]);
+			storeVec2(fp, meshes[m].uvCoords[v]);
+			storeVec3(fp, meshes[m].normals[v]);
+		}
+		storeInt(fp, meshes[m].materialID);
+	}
+
+	storeInt(fp, animCount);
+	for(int a = 0; a < animCount; a++) {
+		storeInt(fp, anims[a].nameLength);
+		storeChars(fp, anims[a].name, anims[a].nameLength);
+		storeDouble(fp, anims[a].duration);
+		storeDouble(fp, anims[a].ticksPerSecond);
+		storeInt(fp, anims[a].channelCount);
+		for(int i = 0; i < anims[a].channelCount; i++) {storeInt(fp, anims[a].channelIndices[i]);}
+	}
+
+	storeInt(fp, channelCount);
+	for(int c = 0; c < channelCount; c++) {
+		storeInt(fp, channels[c].nodeNameLength);
+		storeChars(fp, channels[c].nodeName, channels[c].nodeNameLength);
+		storeInt(fp, channels[c].positionKeyCount);
+		for(int i = 0; i < channels[c].positionKeyCount; i++) {storeDouble(fp, channels[c].positionKeyTimes[i]);}
+		for(int i = 0; i < channels[c].positionKeyCount; i++) {storeVec3(fp, channels[c].positionKeyValues[i]);}
+		storeInt(fp, channels[c].rotationKeyCount);
+		for(int i = 0; i < channels[c].rotationKeyCount; i++) {storeDouble(fp, channels[c].rotationKeyTimes[i]);}
+		for(int i = 0; i < channels[c].rotationKeyCount; i++) {storeQuat(fp, channels[c].rotationKeyValues[i]);}
+		storeInt(fp, channels[c].scaleKeyCount);
+		for(int i = 0; i < channels[c].scaleKeyCount; i++) {storeDouble(fp, channels[c].scaleKeyTimes[i]);}
+		for(int i = 0; i < channels[c].scaleKeyCount; i++) {storeVec3(fp, channels[c].scaleKeyValues[i]);}
+	}
+	
+	fclose(fp);
+}
+
 
 #endif

@@ -69,7 +69,7 @@ int main() {
 		anims[a].setChannelIndices(channelIndices);
 	}
 
-	cexport(nodeCount, nodes, meshCount, meshes, animCount, anims, animChannelCount, animChannels);
+	exportRaw(nodeCount, nodes, meshCount, meshes, animCount, anims, animChannelCount, animChannels);
 
 	return 0;
 }

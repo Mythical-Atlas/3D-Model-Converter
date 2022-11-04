@@ -24,6 +24,9 @@
     <None Include="sonic.fbx">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="model.c3m">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="model.h">
